@@ -124,7 +124,7 @@
         }
 
         async function loadBookings() {
-            const res = await fetch('/api/booking');
+            const res = await fetch('/api/bookings');
             bookings = await res.json();
         }
 
@@ -419,7 +419,7 @@
                 });
                 alert("✅ Booking updated");
             } else {
-                await fetch('/api/booking', {
+                await fetch('/api/bookings', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
@@ -481,7 +481,7 @@
 
             const payload = { apartment, checkin, checkout, guest, price };
 
-            const res = await fetch('/api/booking', {
+            const res = await fetch('/api/bookings', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload),
