@@ -124,7 +124,7 @@
         }
 
         async function loadBookings() {
-            const res = await fetch('http://localhost:5000/api/bookings');
+            const res = await fetch('/api/booking');
             bookings = await res.json();
         }
 
@@ -165,7 +165,7 @@
             const year = new Date().getFullYear();
             const selectedApt = document.getElementById('apartmentFilter').value;
 
-            const res = await fetch(`http://localhost:5000/api/reports?year=${year}`);
+            const res = await fetch(`/api/reports?year=${year}`);
             const data = await res.json();
 
             const container = document.getElementById('reportCards');
@@ -368,7 +368,7 @@
 
         async function deleteBooking(id) {
             try {
-                const res = await fetch(`http://localhost:5000/api/bookings/${id}`, {
+                const res = await fetch(`/api/bookings/${id}`, {
                     method: 'DELETE'
                 });
                 const data = await res.json();
@@ -412,14 +412,14 @@
             };
 
             if (id) {
-                await fetch(`http://localhost:5000/api/bookings/${id}`, {
+                await fetch(`/api/bookings/${id}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
                 alert("✅ Booking updated");
             } else {
-                await fetch('http://localhost:5000/api/bookings', {
+                await fetch('/api/booking', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
@@ -481,7 +481,7 @@
 
             const payload = { apartment, checkin, checkout, guest, price };
 
-            const res = await fetch('http://localhost:5000/api/bookings', {
+            const res = await fetch('/api/booking', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload),
