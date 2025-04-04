@@ -54,7 +54,7 @@ const SECRET_KEY = process.env.JWT_SECRET || 'my-secret';
 // ============================
 
 // Create Admin (one-time use)
-app.post('/api/admins', authenticateAdmin, async (req, res) => {
+app.post('/api/admins', async (req, res) => {
   const { email, password } = req.body;
 
   try {
