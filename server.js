@@ -76,7 +76,7 @@ app.post('/api/admins', async (req, res) => {
     res.status(201).json({ message: 'Admin registered!', admin: result.rows[0] });
 
   } catch (err) {
-    console.error("❌ Error registering admin:", err.message); // <-- log the actual error
+    console.error("❌ Error registering admin:", err);  // <-- log the actual error
     res.status(500).json({ error: 'Failed to create admin' });
   }
 });
