@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Create Admin</title>
 </head>
+
 <body>
   <h2>Create Admin</h2>
   <input id="email" placeholder="Email" />
@@ -18,7 +20,7 @@
       const password = document.getElementById('password').value;
       const token = localStorage.getItem('token');
 
-      const res = await fetch('http://localhost:5000/api/admins', {
+      const res = await fetch("/api/admins", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -40,5 +42,5 @@
     }
   </script>
 </body>
-</html>
 
+</html>
