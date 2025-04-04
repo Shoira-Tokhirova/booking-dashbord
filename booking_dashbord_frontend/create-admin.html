@@ -15,16 +15,22 @@
   <p id="message" style="margin-top: 1rem;"></p>
 
   <script>
+    // ✅ Redirect if not logged in
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert("❌ Access denied. Please log in as an admin first.");
+      window.location.href = "/login.html";
+    }
+
     async function createAdmin() {
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
-      const token = localStorage.getItem('token');
 
       const res = await fetch("/api/admins", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${token}`  // ✅ Send token
         },
         body: JSON.stringify({ email, password })
       });
