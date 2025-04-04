@@ -204,7 +204,9 @@ app.get('/api/reports', async (req, res) => {
     res.status(500).json({ error: 'Failed to generate report' });
   }
 });
-
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'booking_dashbord_frontend', 'booking_dashbord.html'));
+});
 // ============================
 // 🟢 Start Server
 // ============================
