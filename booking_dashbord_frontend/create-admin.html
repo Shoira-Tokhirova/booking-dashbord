@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Create Admin</title>
+</head>
+<body>
+  <h2>Create Admin</h2>
+  <input id="email" placeholder="Email" />
+  <input id="password" type="password" placeholder="Password" />
+  <button onclick="createAdmin()">Create Admin</button>
+
+  <p id="message" style="margin-top: 1rem;"></p>
+
+  <script>
+    async function createAdmin() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const token = localStorage.getItem('token');
+
+      const res = await fetch('http://localhost:5000/api/admins', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ email, password })
+      });
+
+      const result = await res.json();
+      const messageEl = document.getElementById('message');
+
+      if (res.ok) {
+        messageEl.innerHTML = `✅ Admin created successfully! <br><a href="login.html">Go to Login</a>`;
+        messageEl.style.color = 'green';
+      } else {
+        messageEl.textContent = result.error || '❌ Failed to create admin';
+        messageEl.style.color = 'red';
+      }
+    }
+  </script>
+</body>
+</html>
+
