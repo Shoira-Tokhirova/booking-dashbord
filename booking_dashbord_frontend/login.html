@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <title>Login</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body class="bg-gray-100 flex justify-center items-center h-screen">
   <form id="loginForm" class="bg-white shadow-md p-6 rounded w-80">
     <h2 class="text-2xl font-bold mb-4">Admin Login</h2>
@@ -20,7 +22,7 @@
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
 
-      const res = await fetch('http://localhost:5000/api/login', {
+      const res = await fetch("/api/login", {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
@@ -37,4 +39,5 @@
     });
   </script>
 </body>
+
 </html>
