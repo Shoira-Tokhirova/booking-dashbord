@@ -57,15 +57,26 @@ const SECRET_KEY = process.env.JWT_SECRET || 'my-secret';
 app.post('/api/admins', async (req, res) => {
   const { email, password } = req.body;
 
+  console.log("📨 Attempting to create admin:", email);
+
   try {
+    if (!email || !password) {
+      return res.status(400).json({ error: "Email and password required" });
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
+
     const result = await pool.query(
       'INSERT INTO admins (email, password) VALUES ($1, $2) RETURNING id, email',
       [email, hashedPassword]
     );
-    res.status(201).json({ message: '✅ Admin created', admin: result.rows[0] });
+
+    console.log("✅ Admin created:", result.rows[0]);
+
+    res.status(201).json({ message: 'Admin registered!', admin: result.rows[0] });
+
   } catch (err) {
-    console.error("❌ Error creating admin:", err);
+    console.error("❌ Error registering admin:", err.message); // <-- log the actual error
     res.status(500).json({ error: 'Failed to create admin' });
   }
 });
