@@ -215,6 +215,71 @@ app.get('/api/reports', async (req, res) => {
     res.status(500).json({ error: 'Failed to generate report' });
   }
 });
+const ical = require('ical');
+const axios = require('axios');
+
+// SYNC ICAL ROUTE
+app.get('/api/sync-calendars', async (req, res) => {
+  try {
+    const apartmentsResult = await pool.query('SELECT * FROM apartments');
+    const apartments = apartmentsResult.rows;
+
+    let newImports = 0;
+
+    for (const apt of apartments) {
+      const urls = [
+        { url: apt.airbnb_ical_url, source: 'Airbnb' },
+        { url: apt.booking_ical_url, source: 'Booking.com' }
+      ];
+
+      for (const { url, source } of urls) {
+        if (!url) continue;
+
+        try {
+          const response = await axios.get(url);
+          const data = ical.parseICS(response.data);
+
+          for (const k in data) {
+            const event = data[k];
+            if (!event.start || !event.end) continue;
+
+            const checkin = new Date(event.start);
+            const checkout = new Date(event.end);
+
+            const guest = event.summary || 'Guest';
+            const external_id = event.uid;
+
+            // Prevent duplicate entries
+            const exists = await pool.query(
+              'SELECT * FROM bookings WHERE external_id = $1',
+              [external_id]
+            );
+
+            if (exists.rowCount > 0) continue;
+
+            // Insert into bookings
+            await pool.query(
+              `INSERT INTO bookings (apartment, checkin, checkout, guest, price, source, external_id, synced_from_ical)
+               VALUES ($1, $2, $3, $4, $5, $6, $7, true)`,
+              [apt.name, checkin, checkout, guest, 0, source, external_id]
+            );
+
+            newImports++;
+          }
+
+        } catch (err) {
+          console.error(`❌ Failed to sync from ${source} for ${apt.name}:`, err.message);
+        }
+      }
+    }
+
+    res.json({ message: `✅ Sync complete. ${newImports} new bookings added.` });
+
+  } catch (err) {
+    console.error("❌ Error syncing calendars:", err);
+    res.status(500).json({ error: 'Failed to sync calendars' });
+  }
+});
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'booking_dashbord_frontend', 'booking_dashbord.html'));
 });
